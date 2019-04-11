@@ -61,7 +61,7 @@ std::string rtf::validate_seq(std::string seq)
 	if(seq =="")
 		seq = "ZYX";	
 	bool invalid_flag = false;
-	if(seq.size()>0 && seq.size()<3)
+	if(seq.size()!=3)
 	{
 		invalid_flag = true;
 	}
