@@ -66,7 +66,7 @@ std::string rtf::validate_seq(std::string seq)
 		invalid_flag = true;
 	}
 	for (int i =0;i<3;++i)
-		if(seq[i]!='X' && seq[i]!='Y' && seq[i]!='Z')
+		if(seq[i]!='X' && seq[i]!='Y' && seq[i]!='Z' && seq[i]!='x' && seq[i]!='y' && seq[i]!='z')
 		{
 			invalid_flag = true; 
 			break;
@@ -87,11 +87,11 @@ Eigen::Matrix3d rtf::eul2rot(Eigen::MatrixXd eul_angles, std::string seq)
 	Eigen::Matrix3d rot_mat = Eigen::Matrix3d::Identity();
 	for (int i=0; i<3; ++i)
 	{
-		if(seq[i]=='X')
+		if(seq[i]=='X' || seq[i]=='x')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitX());
-		else if(seq[i]=='Y')
+		else if(seq[i]=='Y' || seq[i]=='y')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitY());			
-		else if(seq[i]=='Z')
+		else if(seq[i]=='Z' || seq[i]=='z')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitZ());					
 	}
 	return rot_mat; 
@@ -105,11 +105,11 @@ Eigen::MatrixXd rtf::rot2eul(Eigen::Matrix3d rot_mat, std::string seq)
 	int rot_idx[3];
 	for (int i=0; i<3; ++i)
 	{
-		if(seq[i]=='X')
+		if(seq[i]=='X' || seq[i]=='x')
 			rot_idx[i] = 0;
-		else if(seq[i]=='Y')
+		else if(seq[i]=='Y' || seq[i]=='y')
 			rot_idx[i] = 1;
-		else if(seq[i]=='Z')
+		else if(seq[i]=='Z' || seq[i]=='z')
 			rot_idx[i] = 2;
 	}	
 	Eigen::MatrixXd eul_angles(1,3);
@@ -154,11 +154,11 @@ Eigen::MatrixXd rtf::eul2qt(Eigen::MatrixXd eul_angles,std::string seq)
 	Eigen::Matrix3d rot_mat = Eigen::Matrix3d::Identity();
 	for (int i=0; i<3; ++i)
 	{
-		if(seq[i]=='X')
+		if(seq[i]=='X' || seq[i]=='x')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitX());
-		else if(seq[i]=='Y')
+		else if(seq[i]=='Y' || seq[i]=='y')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitY());			
-		else if(seq[i]=='Z')
+		else if(seq[i]=='Z' || seq[i]=='z')
 			rot_mat = rot_mat * Eigen::AngleAxisd(eul_angles(0,i), Eigen::Vector3d::UnitZ());					
 	}
 	Eigen::MatrixXd quat(1,4);
@@ -179,11 +179,11 @@ Eigen::MatrixXd rtf::qt2eul(Eigen::MatrixXd quat, std::string seq)
 	int rot_idx[3];
 	for (int i=0; i<3; ++i)
 	{
-		if(seq[i]=='X')
+		if(seq[i]=='X' || seq[i]=='x')
 			rot_idx[i] = 0;
-		else if(seq[i]=='Y')
+		else if(seq[i]=='Y' || seq[i]=='y')
 			rot_idx[i] = 1;
-		else if(seq[i]=='Z')
+		else if(seq[i]=='Z' || seq[i]=='z')
 			rot_idx[i] = 2;
 	}	
 	Eigen::MatrixXd eul_angles(1,3);
