@@ -2,7 +2,7 @@
 #include <Eigen/Eigen>
 #include <vector>
 #include <string>
-#include "gen_utilities/transformation_utilities.hpp"
+#include "transformation_utilities.hpp"
 
 ///////////////////////////////////////////////////////////
 

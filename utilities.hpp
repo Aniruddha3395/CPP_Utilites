@@ -1,5 +1,5 @@
-#ifndef UTILITIES
-#define UTILITIES
+#ifndef UTILITIES_HPP
+#define UTILITIES_HPP
 
 #include <Eigen/Dense>
 #include <vector>

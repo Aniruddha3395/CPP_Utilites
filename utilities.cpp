@@ -2,9 +2,9 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <string>
-#include "gen_utilities/file_rw.hpp"
-#include "gen_utilities/transformation_utilities.hpp"
-#include "gen_utilities/utilities.hpp"
+#include "file_rw.hpp"
+#include "transformation_utilities.hpp"
+#include "utilities.hpp"
 
 std::vector<std::vector<int> > ut::GetUniqueRows(std::vector<std::vector<int> > input)
 {

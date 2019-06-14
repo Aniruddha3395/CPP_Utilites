@@ -1,7 +1,7 @@
 #define _BSD_SOURCE
 #include <sys/socket.h>
 #include <ros/ros.h>
-#include "gen_utilities/robot_comm.hpp"
+#include "robot_comm.hpp"
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>

@@ -1,5 +1,5 @@
-#ifndef PLOT_UTILITIES
-#define PLOT_UTILITIES
+#ifndef PLOT_UTILITIES_HPP
+#define PLOT_UTILITIES_HPP
 
 #include <string>
 #include <vector>
