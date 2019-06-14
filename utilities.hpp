@@ -70,6 +70,12 @@ public:
 	static std::vector<int> find_idx(std::vector<int>);
 	static std::vector<int> find_idx(std::vector<float>);
 	static std::vector<int> find_idx(std::vector<double>);
+
+	// get the norm of vector or 1-d matrix
+	static double vec_norm(Eigen::MatrixXd);
+	static double vec_norm(std::vector<double>);
+	static double vec_norm(std::vector<int>);
+
 };
 
 #endif

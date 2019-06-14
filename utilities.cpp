@@ -2,9 +2,9 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <string>
-#include "file_rw.hpp"
-#include "transformation_utilities.hpp"
-#include "utilities.hpp"
+#include "gen_utilities/file_rw.hpp"
+#include "gen_utilities/transformation_utilities.hpp"
+#include "gen_utilities/utilities.hpp"
 
 std::vector<std::vector<int> > ut::GetUniqueRows(std::vector<std::vector<int> > input)
 {
@@ -565,6 +565,7 @@ Eigen::VectorXd ut::linsp(double strt, double end, double stp)
 
 ////////////////////////////////////////////////////////////
 
+// triangle are approach
 std::vector<int> ut::InPoly(Eigen::MatrixXd v, Eigen::MatrixXd pts)
 {
     std::vector<int> inp;
@@ -679,4 +680,81 @@ std::vector<int> ut::find_idx(std::vector<double> vec)
         }
     }
     return idx;
+}
+
+////////////////////////////////////////////////////////////
+
+double ut::vec_norm(Eigen::MatrixXd vec)
+{
+    if (vec.rows()==0)
+    {
+        std::cout << "Empty vector" << std::endl;
+        return 0;
+    }
+    else
+    {
+        if (vec.cols()==1)
+        {
+            double sum = 0;
+            for (int i=0;i<vec.rows();++i)
+            {
+                sum += vec(i,0)*vec(i,0);
+            }
+            return std::sqrt(sum);
+        }
+        else if (vec.rows()==1)
+        {
+            double sum = 0;
+            for (int i=0;i<vec.cols();++i)
+            {
+                sum += vec(0,i)*vec(0,i);
+            }
+            return std::sqrt(sum);    
+        }
+        else
+        {
+            std::cout << "input should be either row matrix or column matrix" << std::endl;
+            return 0;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////
+
+double ut::vec_norm(std::vector<double> vec)
+{
+    if (vec.size()==0)
+    {
+        std::cout << "Empty vector" << std::endl;
+        return 0;
+    }
+    else
+    {
+        double sum = 0;
+        for (int i=0;i<vec.size();++i)
+        {
+            sum += vec[i]*vec[i];
+        }
+        return std::sqrt(sum);
+    }
+}
+
+////////////////////////////////////////////////////////////
+
+double ut::vec_norm(std::vector<int> vec)
+{
+    if (vec.size()==0)
+    {
+        std::cout << "Empty vector" << std::endl;
+        return 0;
+    }
+    else
+    {
+        double sum = 0;
+        for (int i=0;i<vec.size();++i)
+        {
+            sum += vec[i]*vec[i];
+        }
+        return std::sqrt(sum);
+    }
 }

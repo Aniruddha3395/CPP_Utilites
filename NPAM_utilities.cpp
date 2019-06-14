@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include "utilities.hpp"
-#include "transformation_utilities.hpp"
-#include "NPAM_utilities.hpp"
+#include "gen_utilities/utilities.hpp"
+#include "gen_utilities/transformation_utilities.hpp"
+#include "gen_utilities/NPAM_utilities.hpp"
 
 ///////////////////////////////////////////////////////////
 

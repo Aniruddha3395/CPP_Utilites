@@ -5,7 +5,7 @@
 #include <vector>
 #include <Eigen/Eigen>
 #include "stdlib.h"
-#include "file_rw.hpp"
+#include "gen_utilities/file_rw.hpp"
 
 std::vector< std::vector<double> > file_rw::file_read_vec(std::string file_name)
 {
