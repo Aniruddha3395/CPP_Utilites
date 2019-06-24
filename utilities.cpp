@@ -565,31 +565,133 @@ Eigen::VectorXd ut::linsp(double strt, double end, double stp)
 
 ////////////////////////////////////////////////////////////
 
-// triangle are approach
-std::vector<int> ut::InPoly(Eigen::MatrixXd v, Eigen::MatrixXd pts)
+Eigen::MatrixXd ut::InPoly(Eigen::MatrixXd q, Eigen::MatrixXd p)
 {
-    std::vector<int> inp;
-    double A = 0.0;
-    double A1 = 0.0;
-    double A2 = 0.0;
-    double A3 = 0.0;
-    double tol = 1e-12;
-    for (int i=0;i<pts.rows();++i)
-    {
-        A = fabs(0.5*(v(0,0)*(v(1,1)-v(2,1))-v(0,1)*(v(1,0)-v(2,0))+v(1,0)*v(2,1)-v(2,0)*v(1,1)));
-        A1 = fabs((0.5*(pts(i,0)*(v(1,1)-v(2,1))-pts(i,1)*(v(1,0)-v(2,0))+v(1,0)*v(2,1)-v(2,0)*v(1,1))));
-        A2 = fabs(0.5*(v(0,0)*(pts(i,1)-v(2,1))-v(0,1)*(pts(i,0)-v(2,0))+pts(i,0)*v(2,1)-v(2,0)*pts(i,1)));
-        A3 = fabs(0.5*(v(0,0)*(v(1,1)-pts(i,1))-v(0,1)*(v(1,0)-pts(i,0))+v(1,0)*pts(i,1)-pts(i,0)*v(1,1)));
-        if (fabs(A-A1-A2-A3)<tol)
-        {
-            inp.push_back(1);
-        }
-        else
-        {
-            inp.push_back(0);
-        }
-    }
-    return inp;
+	double l1[2][2];
+	double l2[2][2];
+
+	Eigen::MatrixXd in = Eigen::VectorXd::Constant(q.rows(),1,0);
+
+	double xmin = p.col(0).minCoeff();
+	double xmax = p.col(0).maxCoeff();
+	double ymin = p.col(1).minCoeff();
+	double ymax = p.col(1).maxCoeff();
+
+	for (long i=0;i<q.rows();++i)
+	{
+		// bounding box test
+		if (q(i,0)<xmin || q(i,0)>xmax || q(i,1)<ymin || q(i,1)>ymax)
+		{
+			continue;
+		}
+		int intersection_count = 0;
+		Eigen::MatrixXd cont_lines = Eigen::MatrixXd::Constant(p.rows(),1,0);
+		for (int j=0;j<p.rows();++j)
+		{
+			if (j==0)
+			{
+				l1[0][0] = q(i,0);l1[0][1] = q(i,1);
+				l1[1][0] = xmax;l1[1][1] = q(i,1);
+				l2[0][0] = p(p.rows()-1,0);l2[0][1] = p(p.rows()-1,1);
+				l2[1][0] = p(j,0);l2[1][1] = p(j,1);
+				if (ut::lines_intersect(l1,l2))
+				{
+					intersection_count++;
+					cont_lines(j,0) = 1;
+				}	
+			}
+			else
+			{
+				l1[0][0] = q(i,0);l1[0][1] = q(i,1);
+				l1[1][0] = xmax;l1[1][1] = q(i,1);
+				l2[0][0] = p(j,0);l2[0][1] = p(j,1);
+				l2[1][0] = p(j-1,0);l2[1][1] = p(j-1,1);
+				if (ut::lines_intersect(l1,l2))
+				{
+					intersection_count++;
+					cont_lines(j,0) = 1;
+					if (cont_lines(j-1,0)==1)
+					{
+						if (p(j-1,1)==q(i,1))
+						{
+							if (j-1==0)
+							{
+								if (!((p(p.rows()-1,1)<p(j-1,1) && p(j,1)<p(j-1,1)) || (p(p.rows()-1,1)>p(j-1,1) && p(j,1)>p(j-1,1))))
+								{
+									intersection_count--;
+								}
+							}
+							else
+							{
+								if (!((p(j-2,1)<p(j-1,1) && p(j,1)<p(j-1,1)) || (p(j-2,1)>p(j-1,1) && p(j,1)>p(j-1,1))))
+								{
+									intersection_count--;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if (intersection_count%2==1)
+		{
+			in(i,0) = 1;
+		}
+	}
+	return in;
+}
+
+////////////////////////////////////////////////////////////
+
+bool ut::lines_intersect(double l1[2][2], double l2[2][2])
+{
+	// l1 for horizontal ray line...slope is always zero
+
+	// checking if other slope is zero
+	if (l2[0][1]==l2[1][1])
+	{
+    	return false;
+	}
+	else
+	{
+		// checking both pts of second line above first line
+		if ((l2[0][1]>l1[0][1] && l2[1][1]>l1[0][1]) || (l2[0][1]<l1[0][1] && l2[1][1]<l1[0][1]))
+		{
+			return false;
+		}
+		else
+		{
+			// checking both pts of second line either on right or on left of fist line
+			if ((l2[0][0]<l1[0][0] && l2[1][0]<l1[0][0]) || (l2[0][0]>l1[1][0] && l2[1][0]>l1[1][0]))
+			{
+				return false;
+			}
+			else
+			{
+				// checking if other line is vertical
+				if (l2[0][0]== l2[1][0])
+				{
+					return true;
+				}
+				else
+				{
+					// getting intersection point
+					double m2 = (l2[1][1]-l2[0][1])/(l2[1][0]-l2[0][0]);		
+					double x = (l1[0][1]+m2*l2[0][0]-l2[0][1])/m2;
+					// checking if intersection point lies on the first line
+					if ((x>l1[0][0] || std::abs(x-l1[0][0])<1e-9) && (x<l1[1][0] || std::abs(x-l1[1][0])<1e-9))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+		}
+	} 
+	return false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -625,6 +727,21 @@ std::vector<int> ut::find_idx(Eigen::VectorXf vec)
 ////////////////////////////////////////////////////////////
 
 std::vector<int> ut::find_idx(Eigen::VectorXd vec)
+{
+    std::vector<int> idx;
+    for (int i=0;i<vec.rows();++i)
+    {
+        if (vec(i,0)!=0)
+        {
+            idx.push_back(i);   
+        }
+    }
+    return idx;
+}
+
+////////////////////////////////////////////////////////////
+
+std::vector<int> ut::find_idx(Eigen::MatrixXd vec)
 {
     std::vector<int> idx;
     for (int i=0;i<vec.rows();++i)
