@@ -217,7 +217,7 @@ Eigen::MatrixXd	NPAM::project_grid_points(Eigen::MatrixXd fnew, Eigen::MatrixXd 
 
 		// projecting triagles on to the xy plane and 
 		// storing all grid points which are inside triangle
-		std::vector<int> in = ut::InPoly(tri, pts);
+		Eigen::MatrixXd in = ut::InPoly(pts, tri);
 		std::vector<int> loc = ut::find_idx(in);
 		Eigen::MatrixXd store(loc.size(),pts.cols());
 		Eigen::VectorXd storez(loc.size(),1);
