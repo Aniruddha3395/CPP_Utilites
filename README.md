@@ -9,14 +9,14 @@
 
 1. file_rw.cpp : *file_rw*
 	* file reading methods
-	``` static std::vector< std::vector<double> > file_read_vec(std::string ) ```
-	``` static Eigen::MatrixXd file_read_mat(std::string); ```
-	``` static void file_write(std::string, std::vector< std::vector<int> >); ```
-	``` static void file_write(std::string, std::vector< std::vector<float> >); ```
-	``` static void file_write(std::string, std::vector< std::vector<double> >); ```
-	``` static void file_write(std::string, Eigen::MatrixXd); ```
-	``` static void file_write(std::string, Eigen::MatrixXi); ```
-	``` static void file_write(std::string, Eigen::MatrixXf); ```
+	* ``` static std::vector< std::vector<double> > file_read_vec(std::string ) ```
+	* ``` static Eigen::MatrixXd file_read_mat(std::string); ```
+	* ``` static void file_write(std::string, std::vector< std::vector<int> >); ```
+	* ``` static void file_write(std::string, std::vector< std::vector<float> >); ```
+	* ``` static void file_write(std::string, std::vector< std::vector<double> >); ```
+	* ``` static void file_write(std::string, Eigen::MatrixXd); ```
+	* ``` static void file_write(std::string, Eigen::MatrixXi); ```
+	* ``` static void file_write(std::string, Eigen::MatrixXf); ```
 
 2. NPAM_utilities.cpp : *NPAM*
 	* static Eigen::MatrixXd rotate_pts(Eigen::MatrixXd, double, double, double);
