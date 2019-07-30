@@ -624,4 +624,3 @@ Eigen::MatrixXd NPAM::Infill_Path_with_euler(const Eigen::MatrixXd& fillpts, boo
 }
 
 ///////////////////////////////////////////////////////////
-

@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <string>
+#include <chrono>
 
 class ut
 {
@@ -78,6 +79,15 @@ public:
 	static double vec_norm(Eigen::MatrixXd);
 	static double vec_norm(std::vector<double>);
 	static double vec_norm(std::vector<int>);
+
+	// generating uniform pointcloud on the mesh model
+	static Eigen::MatrixXd generate_pointcloud(Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd, double, double);
+	static Eigen::MatrixXd add_pts(Eigen::MatrixXd, Eigen::MatrixXd);
+	static Eigen::MatrixXd generate_grid_points(double, double, double, double, double, double);
+
+	// timer for execution time evaluation
+	static void timer_start();
+	static void timer_end(std::string time_unit="millisec");
 
 };
 

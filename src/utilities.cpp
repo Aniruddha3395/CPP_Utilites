@@ -5,6 +5,10 @@
 #include "file_rw.hpp"
 #include "transformation_utilities.hpp"
 #include "utilities.hpp"
+#include <chrono>
+
+std::chrono::high_resolution_clock::time_point clock_start;
+std::chrono::high_resolution_clock::time_point clock_end;
 
 std::vector<std::vector<int> > ut::GetUniqueRows(std::vector<std::vector<int> > input)
 {
@@ -948,5 +952,153 @@ double ut::vec_norm(std::vector<int> vec)
             sum += vec[i]*vec[i];
         }
         return std::sqrt(sum);
+    }
+}
+
+////////////////////////////////////////////////////////////
+
+Eigen::MatrixXd ut::generate_pointcloud(Eigen::MatrixXd v, Eigen::MatrixXd f, Eigen::MatrixXd n, double gap_x, double gap_y)
+{
+    long max_pts_size = 100000000;
+    Eigen::MatrixXd ptcloud_w_normals(max_pts_size,6);
+    // Eigen::MatrixXd ptcloud_normals;
+    long idx_start = 0;
+    double alpha, beta;
+    Eigen::MatrixXd tri(3,3);
+    Eigen::MatrixXd tri2(3,3);
+    Eigen::MatrixXd tri3(3,3);
+    Eigen::MatrixXd tri4(3,3);
+    Eigen::MatrixXd nn(1,3);
+    Eigen::MatrixXd nn2(1,3);
+    Eigen::MatrixXd T = Eigen::MatrixXd::Identity(4,4); 
+    Eigen::MatrixXd T2 = Eigen::MatrixXd::Identity(4,4); 
+    Eigen::MatrixXd T2_inv(4,4); 
+    Eigen::MatrixXd T_inv(4,4);    
+
+    for (long idx=0;idx<f.rows();++idx)
+    {
+        tri.row(0) << v.row(f(idx,0)-1);
+        tri.row(1) << v.row(f(idx,1)-1);
+        tri.row(2) << v.row(f(idx,2)-1);
+        nn = n.row(idx);
+        tri2.row(0) << 0,0,0;
+        tri2.row(1) << tri.row(1).array() - tri.row(0).array();
+        tri2.row(2) << tri.row(2).array() - tri.row(0).array();
+        if (nn(0,1)==0 && nn(0,2)==0)
+        {
+            alpha = 0;
+        }
+        else
+        {
+            alpha = atan(nn(0,1)/nn(0,2));
+        }
+
+        T.block(0,0,3,3) = rtf::rot_x(alpha);
+        nn2 = rtf::apply_transformation(nn,T);
+        tri3 = rtf::apply_transformation(tri2,T);
+        if (nn2(0,0)==0 && nn2(0,2)==0)
+        {
+            beta = 0;
+        }
+        else
+        {
+            beta = -atan(nn2(0,0)/nn2(0,2));
+        }
+        T2.block(0,0,3,3) = rtf::rot_y(beta); 
+        tri4 = rtf::apply_transformation(tri3,T2);
+        Eigen::MatrixXd grid_pts = ut::generate_grid_points(gap_x, gap_y, tri4.col(0).minCoeff(), tri4.col(1).minCoeff(), tri4.col(0).maxCoeff(), tri4.col(1).maxCoeff());
+        Eigen::MatrixXd pts = ut::add_pts(tri4, grid_pts);
+        if (pts.rows()!=0)
+        {
+            T2_inv = T2.inverse();
+            T_inv = T.inverse();
+            Eigen::MatrixXd pts2 = rtf::apply_transformation(pts,T2_inv);
+            Eigen::MatrixXd pts3 = rtf::apply_transformation(pts2,T_inv);
+            pts3.col(0) = pts3.col(0).array() + tri(0,0);
+            pts3.col(1) = pts3.col(1).array() + tri(0,1);
+            pts3.col(2) = pts3.col(2).array() + tri(0,2);
+
+            if (idx_start+pts3.rows() < max_pts_size)
+            {
+                ptcloud_w_normals.block(idx_start,0,pts3.rows(),3) = pts3;
+                Eigen::MatrixXd nn_mat = Eigen::MatrixXd::Constant(pts3.rows(),3,1);
+                nn_mat.col(0) = nn_mat.col(0).array()*nn(0,0);
+                nn_mat.col(1) = nn_mat.col(1).array()*nn(0,1);
+                nn_mat.col(2) = nn_mat.col(2).array()*nn(0,2);
+                ptcloud_w_normals.block(idx_start,3,pts3.rows(),3) = nn_mat;
+                idx_start = idx_start + pts3.rows();
+            }
+            else
+            {
+                std::cout << "ERROR : Pointcloud size limit exceeded!" << std::endl;
+                return ptcloud_w_normals.block(0,0,--idx_start,6);    
+            }
+        }
+    }
+    return ptcloud_w_normals.block(0,0,idx_start,6);
+}
+
+////////////////////////////////////////////////////////////
+
+Eigen::MatrixXd ut::add_pts(Eigen::MatrixXd tri, Eigen::MatrixXd grid_pts)
+{
+    Eigen::MatrixXd in = ut::InPoly(grid_pts, tri);
+    std::vector<int> loc = ut::find_idx(in);
+    Eigen::MatrixXd pts = Eigen::MatrixXd::Constant(loc.size(),3,0);
+    for (int i=0;i<loc.size();++i)
+    {
+        pts(i,0) = grid_pts(loc[i],0);
+        pts(i,1) = grid_pts(loc[i],1);
+    }
+    return pts;
+}
+
+////////////////////////////////////////////////////////////
+
+Eigen::MatrixXd ut::generate_grid_points(double pathgap_x, double pathgap_y, double xmin, double ymin, double xmax, double ymax)
+{
+    // Function to generate the uniform mesh grid of points along the x-y plane
+    // INPUT = gap between the adjacent points and maximum value in x and y direction
+    // OUTPUT = All points consisting the uniform grid
+    Eigen::VectorXd j = ut::linsp(floor(ymin),ceil(ymax),pathgap_y);
+    Eigen::VectorXd i_val = ut::linsp(floor(xmin),ceil(xmax),pathgap_x);
+    Eigen::MatrixXd pts = Eigen::MatrixXd::Constant(j.rows()*i_val.rows(),2,0);
+    long int st_pt = 0;
+    for (long int i=0;i<i_val.rows();++i)
+    {
+        pts.block(st_pt,0,j.rows(),1) = i_val(i)*Eigen::MatrixXd::Constant(j.rows(),1,1);
+        pts.block(st_pt,1,j.rows(),1) = j.block(0,0,j.rows(),j.cols());
+        st_pt = st_pt + j.rows();
+    }
+    return pts; 
+}
+
+////////////////////////////////////////////////////////////
+
+void ut::timer_start()
+{
+    clock_start = std::chrono::high_resolution_clock::now();
+}
+
+////////////////////////////////////////////////////////////
+
+void ut::timer_end(std::string time_unit)
+{
+    clock_end = std::chrono::high_resolution_clock::now();
+    if (time_unit.compare("nanosec")==0)
+    {
+        std::cout << "Time elapsed is : " << std::chrono::duration_cast<std::chrono::nanoseconds>(clock_end - clock_start).count() << " nanoseconds.\n";        
+    }
+    if (time_unit.compare("microsec")==0)
+    {
+        std::cout << "Time elapsed is : " << std::chrono::duration_cast<std::chrono::microseconds>(clock_end - clock_start).count() << " microseconds.\n";        
+    }
+    if (time_unit.compare("millisec")==0)
+    {
+        std::cout << "Time elapsed is : " << std::chrono::duration_cast<std::chrono::milliseconds>(clock_end - clock_start).count() << " milliseconds.\n";        
+    }
+    if (time_unit.compare("sec")==0)
+    {
+        std::cout << "Time elapsed is : " << std::chrono::duration_cast<std::chrono::seconds>(clock_end - clock_start).count() << " seconds.\n";        
     }
 }
