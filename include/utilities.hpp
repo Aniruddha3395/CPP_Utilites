@@ -64,6 +64,7 @@ public:
 	// inpolygon function to check if point/s is/are inside polygon 
 	static Eigen::MatrixXd InPoly(Eigen::MatrixXd, Eigen::MatrixXd);
 	static void InPoly(const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::MatrixXd&);
+	static void InPoly(const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::MatrixXi&);
 	static bool lines_intersect(double l1[2][2], double l2[2][2]);
 
 	// find the index of non-zero elements
@@ -71,6 +72,7 @@ public:
 	static std::vector<int> find_idx(Eigen::VectorXf);
 	static std::vector<int> find_idx(Eigen::VectorXd);
 	static std::vector<int> find_idx(Eigen::MatrixXd);
+	static std::vector<int> find_idx(Eigen::MatrixXi);
 	static std::vector<int> find_idx(std::vector<int>);
 	static std::vector<int> find_idx(std::vector<float>);
 	static std::vector<int> find_idx(std::vector<double>);
