@@ -115,17 +115,17 @@
 	- ``` static std::vector<std::vector<float> > GetUniqueRows(std::vector<std::vector<float> >); ```
 	- ``` static std::vector<std::vector<double> > GetUniqueRows(std::vector<std::vector<double> >); ```
 	##### std::vector to eigen matrix
-	- ``` static Eigen::MatrixXi vec_to_mat(std::vector<std::vector<int> >); ```
-	- ``` static Eigen::MatrixXf vec_to_mat(std::vector<std::vector<float> >); ```
-	- ``` static Eigen::MatrixXd vec_to_mat(std::vector<std::vector<double> >); ```
+	- ``` static Eigen::MatrixXi vec_to_mat(std::vector<std::vector<int> >&); ```
+	- ``` static Eigen::MatrixXf vec_to_mat(std::vector<std::vector<float> >&); ```
+	- ``` static Eigen::MatrixXd vec_to_mat(std::vector<std::vector<double> >&); ```
 	##### eigen matrix to std::vector 
-	- ``` static std::vector<std::vector<int> > mat_to_vec(Eigen::MatrixXi); ```
-	- ``` static std::vector<std::vector<float> > mat_to_vec(Eigen::MatrixXf); ```
-	- ``` static std::vector<std::vector<double> > mat_to_vec(Eigen::MatrixXd); ```
+	- ``` static std::vector<std::vector<int> > mat_to_vec(Eigen::MatrixXi&); ```
+	- ``` static std::vector<std::vector<float> > mat_to_vec(Eigen::MatrixXf&); ```
+	- ``` static std::vector<std::vector<double> > mat_to_vec(Eigen::MatrixXd&); ```
 	##### print vector
-	- ``` static void disp_vec(std::vector<std::vector<int> >); ```
-	- ``` static void disp_vec(std::vector<std::vector<float> >); ```
-	- ``` static void disp_vec(std::vector<std::vector<double> >); ```
+	- ``` static void disp_vec(std::vector<std::vector<int> >&); ```
+	- ``` static void disp_vec(std::vector<std::vector<float> >&); ```
+	- ``` static void disp_vec(std::vector<std::vector<double> >&); ```
 	##### compute tcp from points and normals
 	- ``` static Eigen::MatrixXd compute_TCP(Eigen::MatrixXd, Eigen::MatrixXd); ```
 	##### get least square fitted plane to point distance
