@@ -1,9 +1,15 @@
 # Some Useful CPP Codes
 
+
 ### lIBRARIES REQUIRED:
 1. Eigen ([Link](http://eigen.tuxfamily.org/index.php?title=Main_Page))
-2. nlopt ([Link](https://nlopt.readthedocs.io/en/latest/))
 3. gnuplot-iostream ([Link](https://github.com/dstahlke/gnuplot-iostream)) for plot_utilities
+
+### COMPILING:
+``` 
+cd build
+cmake .. && make  
+```
 
 ### Classes Details
 
@@ -68,12 +74,53 @@
     - ``` void ActiveScatterplot3d(Eigen::MatrixXd, std::string="black", double=1, int=7); ```
 
 4. #### robot_comm.cpp : *robot_comm*
-	##### robot tcpip communication methods
-    - ``` robot_comm(std::string Ip_address, int Port); ```
-    - ``` bool establish_comm(); ```
-    - ``` void send_data(std::string str); ```
-    - ``` std::string receive_data(); ```
-    - ``` void close_comm(); ```
+	##### establish communication with other socket
+    - ``` bool establishComm(); ```
+    ##### send a string over TCP
+    - ``` void sendString(std::string); ```
+    ##### send an integer over TCP
+    - ``` void sendInt(int); ```
+    ##### send a double over TCP
+    - ``` void sendDouble(double); ```
+    ##### send an integer array over TCP
+    - ``` void sendIntArray(std::vector<int> ); ```
+    - ``` void sendIntArray(Eigen::MatrixXi ); ```
+    ##### send a float array over TCP
+    - ``` void sendFloatArray(std::vector<float> ); ```
+    - ``` void sendFloatArray(Eigen::MatrixXf ); ```
+    ##### send a double array over TCP
+    - ``` void sendDoubleArray(std::vector<double> ); ```
+    - ``` void sendDoubleArray(Eigen::MatrixXd ); ```
+    ##### send an integer matrix (2-D array) over TCP
+    - ``` void sendIntMatrix(Eigen::MatrixXi); ```
+    - ``` void sendIntMatrix(std::vector<std::vector<int>>); ```
+    ##### send a float matrix (2-D array) over TCP
+    - ``` void sendFloatMatrix(Eigen::MatrixXf); ```
+    - ``` void sendFloatMatrix(std::vector<std::vector<float>>); ```
+    ##### send a double matrix (2-D array) over TCP
+    - ``` void sendDoubleMatrix(Eigen::MatrixXd); ```
+    - ``` void sendDoubleMatrix(std::vector<std::vector<double>>); ```
+	##### receive a string over TCP
+    - ``` std::string receiveString(); ```
+    ##### receive an integer over TCP
+    - ``` int receiveInt(); ```
+    ##### receive a double over TCP
+    - ``` double receiveDouble(); ```
+    ##### receive an integer array over TCP
+    - ``` std::vector <int> receiveInt1DVec(); ```
+    - ``` Eigen::MatrixXi receiveInt1DMat(); ```
+    ##### receive an double array over TCP
+    - ``` std::vector <double> receiveDouble1DVec(); ```
+    - ``` Eigen::MatrixXd receiveDouble1DMat(); ```
+    ##### receive an integer matrix (2-D array) over TCP
+    - ``` std::vector<std::vector <int>> receiveIntVec(); ```
+    - ``` Eigen::MatrixXi receiveIntMat(); ```
+    ##### receive a double matrix (2-D array) over TCP
+    - ``` std::vector<std::vector <double>> receiveDoubleVec(); ```
+    - ``` Eigen::MatrixXd receiveDoubleMat(); ```
+
+    ##### close socket 
+        void closeComm();
 
 5. #### transformation_utilities.cpp : *rtf*
 	##### get homogenous transformation
@@ -156,6 +203,7 @@
 	##### check if point lies inside the polygon
 	- ``` static Eigen::MatrixXd InPoly(Eigen::MatrixXd, Eigen::MatrixXd); ```
 	- ``` static void InPoly(const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::MatrixXd&); ```
+	- ``` static void InPoly(const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::MatrixXi&); ```
 	##### check if two lines intersect
 	- ``` static bool lines_intersect(double l1[2][2], double l2[2][2]); ```
 	##### find idx of the querry point from the array
@@ -163,6 +211,7 @@
 	- ``` static std::vector<int> find_idx(Eigen::VectorXf); ```
 	- ``` static std::vector<int> find_idx(Eigen::VectorXd); ```
 	- ``` static std::vector<int> find_idx(Eigen::MatrixXd); ```
+	- ``` static std::vector<int> find_idx(Eigen::MatrixXi); ```	
 	- ``` static std::vector<int> find_idx(std::vector<int>); ```
 	- ``` static std::vector<int> find_idx(std::vector<float>); ```
 	- ``` static std::vector<int> find_idx(std::vector<double>); ```
