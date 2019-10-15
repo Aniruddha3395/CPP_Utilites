@@ -40,7 +40,7 @@ std::vector<std::vector<double> > ut::GetUniqueRows(std::vector<std::vector<doub
 
 ///////////////////////////////////////////////////////////
 
-Eigen::MatrixXi ut::vec_to_mat(std::vector<std::vector<int> > vec)
+Eigen::MatrixXi ut::vec_to_mat(std::vector<std::vector<int> >& vec)
 {
     Eigen::MatrixXi mat(vec.size(), vec[0].size());
     for (long int i = 0; i < vec.size(); ++i)
@@ -50,7 +50,7 @@ Eigen::MatrixXi ut::vec_to_mat(std::vector<std::vector<int> > vec)
 
 ///////////////////////////////////////////////////////////
 
-Eigen::MatrixXf ut::vec_to_mat(std::vector<std::vector<float> > vec)
+Eigen::MatrixXf ut::vec_to_mat(std::vector<std::vector<float> >& vec)
 {
     Eigen::MatrixXf mat(vec.size(), vec[0].size());
     for (long int i = 0; i < vec.size(); ++i)
@@ -60,7 +60,7 @@ Eigen::MatrixXf ut::vec_to_mat(std::vector<std::vector<float> > vec)
 
 ///////////////////////////////////////////////////////////
 
-Eigen::MatrixXd ut::vec_to_mat(std::vector<std::vector<double> > vec)
+Eigen::MatrixXd ut::vec_to_mat(std::vector<std::vector<double> >& vec)
 {
     Eigen::MatrixXd mat(vec.size(), vec[0].size());
     for (long int i = 0; i < vec.size(); ++i)
@@ -70,58 +70,112 @@ Eigen::MatrixXd ut::vec_to_mat(std::vector<std::vector<double> > vec)
 
 ////////////////////////////////////////////////////////////
 
-std::vector<std::vector<int> > ut::mat_to_vec(Eigen::MatrixXi mat)
+std::vector<std::vector<double>> ut::mat_to_vec(Eigen::MatrixXd& mat)
 {
-    std::vector<std::vector<int> > vec;
-    for (long int i = 0; i < mat.rows(); ++i)
+    int mcol = mat.cols();
+    std::vector<double> v(mcol);
+    std::vector<std::vector<double>> vec(mat.rows());
+    Eigen::MatrixXd m(1,mcol);
+    for (int i=0;i<mat.rows();++i)
     {
-        std::vector<int> vec_row;
-        for (long int j = 0; j < mat.cols(); ++j)
-        {
-            vec_row.push_back(mat(i,j));
-        }
-        vec.push_back(vec_row);
+        m = mat.row(i);
+        Eigen::VectorXd vecmat(Eigen::Map<Eigen::VectorXd>(m.data(), mcol));
+        Eigen::VectorXd::Map(&v[0], mcol) = vecmat;
+        vec[i] = v;
     }
     return vec;
 }
 
 ////////////////////////////////////////////////////////////
 
-std::vector<std::vector<float> > ut::mat_to_vec(Eigen::MatrixXf mat)
+std::vector<std::vector<float>> ut::mat_to_vec(Eigen::MatrixXf& mat)
 {
-    std::vector<std::vector<float> > vec;
-    for (long int i = 0; i < mat.rows(); ++i)
+    int mcol = mat.cols();
+    std::vector<float> v(mcol);
+    std::vector<std::vector<float>> vec(mat.rows());
+    Eigen::MatrixXf m(1,mcol);
+    for (int i=0;i<mat.rows();++i)
     {
-        std::vector<float> vec_row;
-        for (long int j = 0; j < mat.cols(); ++j)
-        {
-            vec_row.push_back(mat(i,j));
-        }
-        vec.push_back(vec_row);
+        m = mat.row(i);
+        Eigen::VectorXf vecmat(Eigen::Map<Eigen::VectorXf>(m.data(), mcol));
+        Eigen::VectorXf::Map(&v[0], mcol) = vecmat;
+        vec[i] = v;
     }
     return vec;
 }
 
 ////////////////////////////////////////////////////////////
 
-std::vector<std::vector<double> > ut::mat_to_vec(Eigen::MatrixXd mat)
+std::vector<std::vector<int>> ut::mat_to_vec(Eigen::MatrixXi& mat)
 {
-    std::vector<std::vector<double> > vec;
-    for (long int i = 0; i < mat.rows(); ++i)
+    int mcol = mat.cols();
+    std::vector<int> v(mcol);
+    std::vector<std::vector<int>> vec(mat.rows());
+    Eigen::MatrixXi m(1,mcol);
+    for (int i=0;i<mat.rows();++i)
     {
-        std::vector<double> vec_row;
-        for (long int j = 0; j < mat.cols(); ++j)
-        {
-            vec_row.push_back(mat(i,j));
-        }
-        vec.push_back(vec_row);
+        m = mat.row(i);
+        Eigen::VectorXi vecmat(Eigen::Map<Eigen::VectorXi>(m.data(), mcol));
+        Eigen::VectorXi::Map(&v[0], mcol) = vecmat;
+        vec[i] = v;
     }
     return vec;
 }
 
 ////////////////////////////////////////////////////////////
+// deprecated
+// std::vector<std::vector<int> > ut::mat_to_vec(Eigen::MatrixXi& mat)
+// {
+//     std::vector<std::vector<int> > vec;
+//     for (long int i = 0; i < mat.rows(); ++i)
+//     {
+//         std::vector<int> vec_row;
+//         for (long int j = 0; j < mat.cols(); ++j)
+//         {
+//             vec_row.push_back(mat(i,j));
+//         }
+//         vec.push_back(vec_row);
+//     }
+//     return vec;
+// }
 
-void ut::disp_vec(std::vector<std::vector<int> > vec)
+// ////////////////////////////////////////////////////////////
+
+// std::vector<std::vector<float> > ut::mat_to_vec(Eigen::MatrixXf& mat)
+// {
+//     std::vector<std::vector<float> > vec;
+//     for (long int i = 0; i < mat.rows(); ++i)
+//     {
+//         std::vector<float> vec_row;
+//         for (long int j = 0; j < mat.cols(); ++j)
+//         {
+//             vec_row.push_back(mat(i,j));
+//         }
+//         vec.push_back(vec_row);
+//     }
+//     return vec;
+// }
+
+// ////////////////////////////////////////////////////////////
+
+// std::vector<std::vector<double> > ut::mat_to_vec(Eigen::MatrixXd& mat)
+// {
+//     std::vector<std::vector<double> > vec;
+//     for (long int i = 0; i < mat.rows(); ++i)
+//     {
+//         std::vector<double> vec_row;
+//         for (long int j = 0; j < mat.cols(); ++j)
+//         {
+//             vec_row.push_back(mat(i,j));
+//         }
+//         vec.push_back(vec_row);
+//     }
+//     return vec;
+// }
+
+////////////////////////////////////////////////////////////
+
+void ut::disp_vec(std::vector<std::vector<int> >& vec)
 {
     for (long int i=0;i<vec.size();++i)
     {
@@ -142,7 +196,7 @@ void ut::disp_vec(std::vector<std::vector<int> > vec)
 
 ////////////////////////////////////////////////////////////
 
-void ut::disp_vec(std::vector<std::vector<float> > vec)
+void ut::disp_vec(std::vector<std::vector<float> >& vec)
 {
     for (long int i=0;i<vec.size();++i)
     {
@@ -163,7 +217,7 @@ void ut::disp_vec(std::vector<std::vector<float> > vec)
 
 ////////////////////////////////////////////////////////////
 
-void ut::disp_vec(std::vector<std::vector<double> > vec)
+void ut::disp_vec(std::vector<std::vector<double> >& vec)
 {
     for (long int i=0;i<vec.size();++i)
     {
