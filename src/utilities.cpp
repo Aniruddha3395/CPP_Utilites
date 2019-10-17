@@ -246,23 +246,28 @@ Eigen::MatrixXd ut::compute_TCP(Eigen::MatrixXd data_points, Eigen::MatrixXd nor
     Eigen::Vector3d tool_z;
     Eigen::Vector3d dir_vec; 
     Eigen::Vector3d direction;
-    Eigen::MatrixXd bxbybz = Eigen::MatrixXd::Constant(data_points.rows(),9,0);
+    Eigen::MatrixXd bxbybz = Eigen::MatrixXd::Constant(data_points.rows(),9,0);        
     for (unsigned int i=0; i<data_points.rows(); ++i)
     {
         if (i!=data_points.rows()-1)
         {
         // calculating direction vector from sequence of points
-            // direction = (data_points.row(i+1).array() - data_points.row(i).array()).transpose(); 
+            // direction << (data_points.row(i+1).array() - data_points.row(i).array()).transpose(); 
+            direction << (data_points(i+1,0) - data_points(i,0)),(data_points(i+1,1) - data_points(i,1)),(data_points(i+1,2) - data_points(i,2)); 
         // OR
         // applying constant direction vector
-            direction << 0, 1, 0;
-            dir_vec = direction.array()/direction.norm();    
+            // direction << -1, 0, 0;
+        }        
+        if (i==0 && data_points.rows()==1)
+        {
+            direction << -1, 0, 0;
         }
+        dir_vec = -direction.array()/direction.norm();        
         tool_z << -normals.row(i).transpose();
-        tool_x = dir_vec.cross(tool_z);
-        tool_x = tool_x.array()/tool_x.norm();
-        tool_y = tool_z.cross(tool_x);
+        tool_y = tool_z.cross(dir_vec);
         tool_y = tool_y.array()/tool_y.norm();
+        tool_x = tool_y.cross(tool_z);
+        tool_x = tool_x.array()/tool_x.norm();
         bxbybz.block(i,0,1,3) = tool_x.transpose();
         bxbybz.block(i,3,1,3) = tool_y.transpose();
         bxbybz.block(i,6,1,3) = tool_z.transpose();
