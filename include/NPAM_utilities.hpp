@@ -1,3 +1,9 @@
+//****************************************************************************************
+//
+// Author : Aniruddha Shembekar, Research Engineer, University of Southern California
+//
+//****************************************************************************************
+
 #ifndef NPAM_UTILITIES_HPP
 #define NPAM_UTILITIES_HPP
 

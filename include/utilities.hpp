@@ -1,3 +1,9 @@
+//****************************************************************************************
+//
+// Author : Aniruddha Shembekar, Research Engineer, University of Southern California
+//
+//****************************************************************************************
+
 #ifndef UTILITIES_HPP
 #define UTILITIES_HPP
 

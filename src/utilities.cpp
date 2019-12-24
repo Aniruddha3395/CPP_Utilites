@@ -1,3 +1,9 @@
+//****************************************************************************************
+//
+// Author : Aniruddha Shembekar, Research Engineer, University of Southern California
+//
+//****************************************************************************************
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>

@@ -1,3 +1,9 @@
+//****************************************************************************************
+//
+// Author : Aniruddha Shembekar, Research Engineer, University of Southern California
+//
+//****************************************************************************************
+
 #define GNUPLOT_ENABLE_PTY
 
 #include <iostream>

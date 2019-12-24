@@ -1,3 +1,9 @@
+//****************************************************************************************
+//
+// Author : Aniruddha Shembekar, Research Engineer, University of Southern California
+//
+//****************************************************************************************
+
 #define _BSD_SOURCE
 #include <sys/socket.h>
 #include "robot_comm.hpp"
